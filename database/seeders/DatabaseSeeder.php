@@ -13,6 +13,7 @@ use App\Models\Employee;
 use App\Models\Payroll;
 use App\Models\RoomType;
 use App\Models\Room;
+use App\Models\Booking;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -346,6 +347,36 @@ class DatabaseSeeder extends Seeder
                 'floor'        => $r[1],
                 'room_type_id' => $r[2],
                 'status'       => $r[3],
+            ]);
+        }
+
+        // ─── Bookings ───
+        $bookingRooms = Room::pluck('id', 'room_number');
+        $bookingsData = [
+            ['Marites Santos',   'marites@email.com',   '09171234567', '101', '2026-05-21', '2026-05-23', 2, 1, 'confirmed', 3600,  3600,  'cash'],
+            ['John Doe',         'john@email.com',      '09182345678', '103', '2026-05-22', '2026-05-25', 2, 0, 'pending',   5400,  2000,  'gcash'],
+            ['Emily Tan',        'emily@email.com',     '09193456789', '301', '2026-05-22', '2026-05-24', 2, 0, 'confirmed', 5600,  5600,  'card'],
+            ['Robert Lim',       'robert@email.com',    '09204567890', '401', '2026-05-21', '2026-05-21', 1, 0, 'checked_in',4500,  4500,  'cash'],
+            ['Sarah Gonzales',   'sarah@email.com',     '09215678901', '501', '2026-05-20', '2026-05-22', 2, 2, 'checked_in',9000,  5000,  'gcash'],
+            ['Mike Reyes',       'mike@email.com',      '09226789012', '504', '2026-05-23', '2026-05-26', 3, 0, 'pending',  13500, 10000,  'bank'],
+            ['Ana Cruz',         'ana@email.com',       '09237890123', '203', '2026-05-25', '2026-05-27', 2, 0, 'pending',   3600,     0,  null],
+            ['Carlos Villanueva','carlos@email.com',    '09248901234', '304', '2026-05-19', '2026-05-21', 2, 0, 'checked_out',5600,  5600, 'cash'],
+            ['Jean Francisco',   'jean@email.com',      '09259012345', '102', '2026-05-18', '2026-05-20', 1, 0, 'checked_out',2400,  2400, 'cash'],
+        ];
+        foreach ($bookingsData as $b) {
+            Booking::create([
+                'guest_name'    => $b[0],
+                'guest_email'   => $b[1],
+                'guest_phone'   => $b[2],
+                'room_id'       => $bookingRooms[$b[3]],
+                'check_in'      => $b[4],
+                'check_out'     => $b[5],
+                'adults'        => $b[6],
+                'children'      => $b[7],
+                'status'        => $b[8],
+                'total_amount'  => $b[9],
+                'paid_amount'   => $b[10],
+                'payment_method'=> $b[11],
             ]);
         }
     }

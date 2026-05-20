@@ -106,10 +106,11 @@
 ---
 
 ## 1️⃣3️⃣ Booking / Reservations
-- **Model:** Booking.php — id, guest_name, guest_email, guest_phone, room_id, check_in, check_out, adults, children, status (pending/confirmed/checked_in/checked_out/cancelled), total_amount, paid_amount, created_at
-- **Backend:** ❌ Need CRUD + availability check
-- **Views:** ❌ Need booking form, calendar view, check-in/out flow
-- **Migrations:** ❌ Need `create_bookings_table`
+- **Model:** ✅ Booking.php — id, guest_name, guest_email, guest_phone, room_id (FK→rooms), check_in, check_out, adults, children, status (pending/confirmed/checked_in/checked_out/cancelled), total_amount, paid_amount, payment_method, notes
+- **Backend:** ✅ Full CRUD with availability check (overlapping dates blocked), status workflow actions (confirm → check_in → check_out → cancel), AJAX available-rooms endpoint, auto room status update (occupied/cleaning)
+- **Views:** ✅ Index with stats + filters + table, create with AJAX room picker, edit with current room preserved, show with action buttons
+- **Migrations:** ✅ `create_bookings_table` done
+- **Seed Data:** ✅ 9 sample bookings (varying statuses)
 - **Payments:** ❌ Need PayMongo/GCash integration
 
 ---
@@ -154,7 +155,7 @@
 | 10 | **HR/Employees** | ✅ | Done | Done | Done |
 | 11 | **Payroll** | ✅ | Done | Done | Done |
 | 12 | **Rooms / Types** | ✅ | Done | Done | Done | 24 rooms, 4 types
-| 13 | **Bookings** | ❌ | — | — | — |
+| 13 | **Bookings** | ✅ | Done | Done | Done | 9 sample bookings |
 | 14 | **POS** | ❌ | — | — | — |
 | 15 | **Purchase Orders** | ❌ | — | — | — |
 | 16 | **Housekeeping** | ❌ | — | — | — |
