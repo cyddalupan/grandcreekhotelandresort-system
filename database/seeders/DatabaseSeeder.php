@@ -11,6 +11,8 @@ use App\Models\Bill;
 use App\Models\Setting;
 use App\Models\Employee;
 use App\Models\Payroll;
+use App\Models\RoomType;
+use App\Models\Room;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -270,5 +272,81 @@ class DatabaseSeeder extends Seeder
             'net_pay'      => 12600,
             'status'       => 'draft',
         ]);
+
+        // ─── Room Types ───
+        $roomTypesData = [
+            [
+                'name' => 'Standard Double',
+                'description' => 'Comfortable room with two double beds, perfect for families or groups.',
+                'capacity' => 4, 'price_per_night' => 1800,
+                'amenities' => ['Air Conditioning', 'Flat-screen TV', 'Mini Bar', 'Wi-Fi', 'In-room Safe'],
+                'icon' => '🛌',
+            ],
+            [
+                'name' => 'Deluxe King',
+                'description' => 'Spacious room with a king-sized bed, premium amenities, and city view.',
+                'capacity' => 2, 'price_per_night' => 2800,
+                'amenities' => ['Air Conditioning', 'Flat-screen TV', 'Mini Bar', 'Wi-Fi', 'In-room Safe', 'Bathtub', 'City View'],
+                'icon' => '👑',
+            ],
+            [
+                'name' => 'Suite',
+                'description' => 'Luxurious suite with separate living area, premium furnishings, and panoramic views.',
+                'capacity' => 4, 'price_per_night' => 4500,
+                'amenities' => ['Air Conditioning', 'Flat-screen TV', 'Mini Bar', 'Wi-Fi', 'In-room Safe', 'Bathtub', 'Living Area', 'Ocean View', 'Kitchenette'],
+                'icon' => '🏖️',
+            ],
+            [
+                'name' => 'Single Economy',
+                'description' => 'Budget-friendly room with a single bed, ideal for solo travelers.',
+                'capacity' => 1, 'price_per_night' => 1200,
+                'amenities' => ['Air Conditioning', 'Flat-screen TV', 'Wi-Fi'],
+                'icon' => '🧳',
+            ],
+        ];
+        foreach ($roomTypesData as $rt) {
+            RoomType::create($rt);
+        }
+
+        // ─── Rooms ───
+        $rtIds = RoomType::pluck('id', 'name');
+        // Floor 1: Front desk area, Standard & Single rooms
+        $roomsData = [
+            ['101', 1, $rtIds['Single Economy'], 'available'],
+            ['102', 1, $rtIds['Single Economy'], 'available'],
+            ['103', 1, $rtIds['Standard Double'], 'available'],
+            ['104', 1, $rtIds['Standard Double'], 'occupied'],
+            // Floor 2: Standard rooms
+            ['201', 2, $rtIds['Standard Double'], 'available'],
+            ['202', 2, $rtIds['Standard Double'], 'occupied'],
+            ['203', 2, $rtIds['Standard Double'], 'maintenance'],
+            ['204', 2, $rtIds['Standard Double'], 'available'],
+            ['205', 2, $rtIds['Standard Double'], 'available'],
+            // Floor 3: Deluxe King
+            ['301', 3, $rtIds['Deluxe King'], 'available'],
+            ['302', 3, $rtIds['Deluxe King'], 'occupied'],
+            ['303', 3, $rtIds['Deluxe King'], 'available'],
+            ['304', 3, $rtIds['Deluxe King'], 'occupied'],
+            ['305', 3, $rtIds['Deluxe King'], 'cleaning'],
+            // Floor 4: Suites
+            ['401', 4, $rtIds['Suite'], 'available'],
+            ['402', 4, $rtIds['Suite'], 'occupied'],
+            ['403', 4, $rtIds['Suite'], 'available'],
+            ['404', 4, $rtIds['Suite'], 'occupied'],
+            ['405', 4, $rtIds['Suite'], 'available'],
+            // Floor 5: Mix
+            ['501', 5, $rtIds['Deluxe King'], 'available'],
+            ['502', 5, $rtIds['Deluxe King'], 'available'],
+            ['503', 5, $rtIds['Suite'], 'available'],
+            ['504', 5, $rtIds['Suite'], 'available'],
+        ];
+        foreach ($roomsData as $r) {
+            Room::create([
+                'room_number'  => $r[0],
+                'floor'        => $r[1],
+                'room_type_id' => $r[2],
+                'status'       => $r[3],
+            ]);
+        }
     }
 }

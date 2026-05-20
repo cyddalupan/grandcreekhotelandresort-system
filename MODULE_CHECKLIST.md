@@ -96,11 +96,12 @@
 
 ---
 
-## 1️⃣2️⃣ Rooms & Room Types
-- **Model:** RoomType.php (id, name, description, capacity, price_per_night, amenities) + Room.php (id, room_number, room_type_id, floor, status: available/occupied/maintenance/cleaning)
-- **Backend:** ❌ Need CRUD for both
-- **Views:** ❌ Need room grid view, availability calendar
-- **Migrations:** ❌ Need `create_room_types_table`, `create_rooms_table`
+## 1️⃣2️⃣ Rooms & Room Types ✅
+- **Models:** RoomType.php (id, name, description, capacity, price_per_night, amenities JSON, icon, is_active) + Room.php (id, room_number, room_type_id, floor, status [available/occupied/maintenance/cleaning], notes)
+- **Backend:** ✅ Full CRUD — RoomTypeController (index, create, store, show, edit, update, destroy w/ protection if rooms exist) + RoomController (index w/ filters/status stats, create, store, edit, update, destroy)
+- **Views:** ✅ RoomType card layout (create w/ Alpine.js amenity tags, edit, show w/ rooms grid). Room colored card grid (status-coded borders, filters by status/type/floor, 4 stats cards, create, edit, show w/ gradient header)
+- **Migrations:** ✅ `create_room_types_table` + `create_rooms_table`
+- **Seeds:** ✅ 4 room types (Single Economy ₱1,200, Standard Double ₱1,800, Deluxe King ₱2,800, Suite ₱4,500) + 24 rooms across 5 floors (varied statuses)
 
 ---
 
@@ -152,7 +153,7 @@
 | 9 | Auth | 🟡 | Basic | Basic | Done |
 | 10 | **HR/Employees** | ✅ | Done | Done | Done |
 | 11 | **Payroll** | ✅ | Done | Done | Done |
-| 12 | **Rooms** | ❌ | — | — | — |
+| 12 | **Rooms / Types** | ✅ | Done | Done | Done | 24 rooms, 4 types
 | 13 | **Bookings** | ❌ | — | — | — |
 | 14 | **POS** | ❌ | — | — | — |
 | 15 | **Purchase Orders** | ❌ | — | — | — |
