@@ -76,14 +76,17 @@
 
 ---
 
-## 🔟 HR / Employees ⬅️ NEXT
-- **Model:** Employee.php — id, user_id, department_id, position, hire_date, salary, phone, address, emergency_contact, status (active/inactive), created_at
-- **Backend:** ❌ Need CRUD (index, create, store, show, edit, update, destroy)
-- **Views:** ❌ Need list table + create/edit form
-- **Migrations:** ❌ Need `create_employees_table`
-- **Relationships:** Employee belongsTo User, belongsTo Department
+## 🔟 HR / Employees ✅
+- **Model:** Employee.php — id, employee_id, department_id, first_name, last_name, position, hire_date, salary, email, phone, address, emergency_contact, emergency_phone, status (active/inactive/terminated)
+- **Backend:** ✅ Full CRUD (index, create, store, show, edit, update, destroy) + auto-generate EMP-XXX IDs
+- **Views:** ✅ List table with stats cards + create/edit/show forms with profile initials
+- **Migrations:** ✅ `create_employees_table`
+- **Relationships:** Employee belongsTo Department
+- **Seeds:** ✅ 15 employees across all 8 departments with Filipino names and realistic salaries
 
 ---
+
+## 1️⃣1️⃣ Payroll ⬅️ NEXT
 
 ## 1️⃣1️⃣ Payroll
 - **Model:** Payroll.php — id, employee_id, period_start, period_end, gross_pay, deductions, net_pay, status, paid_at, created_at
@@ -148,7 +151,7 @@
 | 7 | Reports | 🟡 | Basic | Basic | — |
 | 8 | Settings | ✅ | Done | Done | Done |
 | 9 | Auth | 🟡 | Basic | Basic | Done |
-| 10 | **HR/Employees** | ❌ | — | — | — |
+| 10 | **HR/Employees** | ✅ | Done | Done | Done |
 | 11 | **Payroll** | ❌ | — | — | — |
 | 12 | **Rooms** | ❌ | — | — | — |
 | 13 | **Bookings** | ❌ | — | — | — |

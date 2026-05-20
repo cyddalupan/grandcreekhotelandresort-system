@@ -9,6 +9,7 @@ use App\Models\Item;
 use App\Models\Movement;
 use App\Models\Bill;
 use App\Models\Setting;
+use App\Models\Employee;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -21,6 +22,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'admin@grandcreek.com',
             'password' => Hash::make('admin123'),
+            'email_verified_at' => now(),
         ]);
 
         // ─── Departments ───
@@ -197,5 +199,38 @@ class DatabaseSeeder extends Seeder
                 'purchase_approval'=> false,
             ],
         ]);
+
+        // ─── Employees ───
+        $employees = [
+            ['EMP-001', $deptIds['Front Office'], 'Maria', 'Santos',      'Front Desk Manager',  '2024-01-15', 35000,  'maria@grandcreek.com',     '+63 912 111 0001'],
+            ['EMP-002', $deptIds['Front Office'], 'Jose',  'Reyes',       'Concierge',           '2024-02-01', 22000,  'jose@grandcreek.com',      '+63 912 111 0002'],
+            ['EMP-003', $deptIds['Housekeeping'], 'Juan',  'Dela Cruz',   'Head Housekeeper',    '2023-06-01', 28000,  'juan@grandcreek.com',      '+63 912 111 0003'],
+            ['EMP-004', $deptIds['Housekeeping'], 'Elena', 'Torres',      'Room Attendant',      '2024-03-01', 18000,  'elena@grandcreek.com',     '+63 912 111 0004'],
+            ['EMP-005', $deptIds['Kitchen'],      'Carlos','Garcia',      'Head Chef',           '2023-08-15', 45000,  'carlos@grandcreek.com',    '+63 912 111 0005'],
+            ['EMP-006', $deptIds['Kitchen'],      'Ana',   'Mendoza',     'Sous Chef',           '2024-01-01', 30000,  'ana@grandcreek.com',       '+63 912 111 0006'],
+            ['EMP-007', $deptIds['Food & Beverage'], 'Rosa', 'Villanueva','Restaurant Manager',  '2023-11-01', 32000,  'rosa@grandcreek.com',      '+63 912 111 0007'],
+            ['EMP-008', $deptIds['Food & Beverage'], 'Ben',  'Lim',       'Bartender',           '2024-04-01', 20000,  'ben@grandcreek.com',       '+63 912 111 0008'],
+            ['EMP-009', $deptIds['Maintenance'],  'Roberto','Cruz',       'Maintenance Head',    '2023-05-01', 30000,  'roberto@grandcreek.com',   '+63 912 111 0009'],
+            ['EMP-010', $deptIds['Security'],     'Miguel','Ramos',       'Security Chief',      '2023-09-01', 27000,  'miguel@grandcreek.com',    '+63 912 111 0010'],
+            ['EMP-011', $deptIds['Administration'],'Carmen','Lopez',       'Admin Manager',       '2023-04-01', 38000,  'carmen@grandcreek.com',    '+63 912 111 0011'],
+            ['EMP-012', $deptIds['Laundry'],      'Pedro', 'Gonzales',    'Laundry Supervisor',  '2024-02-15', 22000,  'pedro@grandcreek.com',     '+63 912 111 0012'],
+            ['EMP-013', $deptIds['Front Office'],  'Liza',  'Marcos',      'Receptionist',        '2024-05-01', 18000,  'liza@grandcreek.com',      '+63 912 111 0013'],
+            ['EMP-014', $deptIds['Housekeeping'], 'Tonyo', 'Santiago',    'Room Attendant',      '2024-05-15', 18000,  'tonyo@grandcreek.com',     '+63 912 111 0014'],
+            ['EMP-015', $deptIds['Administration'],'Diana', 'Fernandez',   'HR Coordinator',      '2024-03-15', 25000,  'diana@grandcreek.com',     '+63 912 111 0015'],
+        ];
+        foreach ($employees as $e) {
+            Employee::create([
+                'employee_id'       => $e[0],
+                'department_id'     => $e[1],
+                'first_name'        => $e[2],
+                'last_name'         => $e[3],
+                'position'          => $e[4],
+                'hire_date'         => $e[5],
+                'salary'            => $e[6],
+                'email'             => $e[7],
+                'phone'             => $e[8],
+                'status'            => 'active',
+            ]);
+        }
     }
 }
