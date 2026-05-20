@@ -8,6 +8,7 @@ use App\Models\Supplier;
 use App\Models\Item;
 use App\Models\Movement;
 use App\Models\Bill;
+use App\Models\Sale;
 use App\Models\Setting;
 use App\Models\Employee;
 use App\Models\Payroll;
@@ -110,7 +111,7 @@ class DatabaseSeeder extends Seeder
                 'min_stock'     => $row[5],
                 'unit'          => $row[6],
                 'purchase_cost' => $row[7],
-                'selling_price' => $row[8],
+                'selling_price' => $row[8] > 0 ? $row[8] : round($row[7] * 1.6, 0),
                 'expiry_date'   => $row[9],
             ]);
             $itemIds[$row[0]] = $item->id;
@@ -377,6 +378,37 @@ class DatabaseSeeder extends Seeder
                 'total_amount'  => $b[9],
                 'paid_amount'   => $b[10],
                 'payment_method'=> $b[11],
+            ]);
+        }
+
+        // ─── Sales (POS) ───
+        $salesData = [
+            ['POS-260521-0001', '[{"name":"Bed Sheets (Queen)","price":700,"quantity":2,"subtotal":1400},{"name":"Bath Towels","price":350,"quantity":4,"subtotal":1400},{"name":"Soap Bars","price":50,"quantity":10,"subtotal":500}]',
+             3300, 12, 396, 0, 3696, 'gcash', 4000, 304, null],
+            ['POS-260521-0002', '[{"name":"Bottled Water (Case)","price":500,"quantity":2,"subtotal":1000},{"name":"Coffee Beans (Arabica)","price":1200,"quantity":1,"subtotal":1200}]',
+             2200, 12, 264, 100, 2364, 'cash', 2500, 136, 'Walk-in guest'],
+            ['POS-260521-0003', '[{"name":"Wine Glasses","price":250,"quantity":6,"subtotal":1500},{"name":"Chicken Breast","price":280,"quantity":5,"subtotal":1400}]',
+             2900, 12, 348, 200, 3048, 'card', 3048, 0, null],
+            ['POS-260521-0004', '[{"name":"Shampoo (Mini)","price":80,"quantity":20,"subtotal":1600},{"name":"Conditioner (Mini)","price":80,"quantity":15,"subtotal":1200}]',
+             2800, 12, 336, 0, 3136, 'gcash', 3200, 64, null],
+            ['POS-260521-0005', '[{"name":"LED Light Bulbs","price":200,"quantity":10,"subtotal":2000},{"name":"All-Purpose Cleaner","price":450,"quantity":3,"subtotal":1350}]',
+             3350, 12, 402, 0, 3752, 'maya', 4000, 248, 'Maintenance supplies'],
+        ];
+        foreach ($salesData as $s) {
+            Sale::create([
+                'receipt_number'  => $s[0],
+                'items'           => json_decode($s[1], true),
+                'subtotal'        => $s[2],
+                'tax_percent'     => $s[3],
+                'tax_amount'      => $s[4],
+                'discount'        => $s[5],
+                'total'           => $s[6],
+                'payment_method'  => $s[7],
+                'tendered_amount' => $s[8],
+                'change'          => $s[9],
+                'notes'           => $s[10],
+                'user_id'         => 1,
+                'created_at'      => now()->subHours(rand(1,8)),
             ]);
         }
     }

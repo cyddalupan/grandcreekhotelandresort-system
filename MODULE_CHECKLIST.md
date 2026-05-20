@@ -116,10 +116,12 @@
 ---
 
 ## 1️⃣4️⃣ Point of Sale (POS)
-- **Model:** Sale.php (id, receipt_number, items JSON, subtotal, tax, discount, total, payment_method, tendered_amount, change, user_id, created_at)
-- **Backend:** ❌ Need create + receipt generation
-- **Views:** ❌ Need POS interface (like a cash register screen)
-- **Migrations:** ❌ Need `create_sales_table`
+- **Model:** ✅ Sale.php — receipt_number, items (JSON), subtotal, tax_percent, tax_amount, discount, total, payment_method, tendered_amount, change, user_id, notes; auto receipt number generation
+- **Backend:** ✅ PosController — live register, sale processing with stock deduction, sales history with filters (date, payment)
+- **Views:** ✅ Register (product grid + cart + checkout modal with payment), Receipt, Sales History table with stats cards
+- **Migrations:** ✅ `create_sales_table` done
+- **Seed Data:** ✅ 5 sample sales (mixed payment methods: cash, gcash, card, maya)
+- **Features:** Cash-register layout, search/category filter, auto 12% tax, discount, change calc, stock auto-deduction on checkout
 
 ---
 
@@ -156,7 +158,7 @@
 | 11 | **Payroll** | ✅ | Done | Done | Done |
 | 12 | **Rooms / Types** | ✅ | Done | Done | Done | 24 rooms, 4 types
 | 13 | **Bookings** | ✅ | Done | Done | Done | 9 sample bookings |
-| 14 | **POS** | ❌ | — | — | — |
+| 14 | **POS** | ✅ | Done | Done | Done | 5 sample sales, 4 payment methods
 | 15 | **Purchase Orders** | ❌ | — | — | — |
 | 16 | **Housekeeping** | ❌ | — | — | — |
 
