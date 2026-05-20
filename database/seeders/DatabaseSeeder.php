@@ -16,86 +16,185 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Create default admin
+        // ─── Admin User ───
         User::create([
             'name' => 'Admin',
             'email' => 'admin@grandcreek.com',
-            'password' => Hash::make('password'),
+            'password' => Hash::make('admin123'),
         ]);
 
-        // Departments
-        $departments = Department::insert([
-            ['name' => 'Front Office', 'description' => 'Reception and guest services', 'manager' => 'Maria Santos', 'active' => true, 'item_count' => 15, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Housekeeping', 'description' => 'Room cleaning and maintenance', 'manager' => 'Juan Dela Cruz', 'active' => true, 'item_count' => 45, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Food & Beverage', 'description' => 'Restaurant and bar operations', 'manager' => 'Ana Reyes', 'active' => true, 'item_count' => 120, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Kitchen', 'description' => 'Food preparation and cooking', 'manager' => 'Carlos Garcia', 'active' => true, 'item_count' => 85, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Maintenance', 'description' => 'Facility repairs and upkeep', 'manager' => 'Roberto Cruz', 'active' => true, 'item_count' => 35, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Laundry', 'description' => 'Linen and uniform cleaning', 'manager' => 'Elena Torres', 'active' => true, 'item_count' => 25, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Security', 'description' => 'Property and guest safety', 'manager' => 'Miguel Ramos', 'active' => true, 'item_count' => 12, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Spa & Wellness', 'description' => 'Spa treatments and fitness', 'manager' => 'Sofia Mendoza', 'active' => true, 'item_count' => 30, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Events & Banquet', 'description' => 'Event planning and execution', 'manager' => 'Luis Fernandez', 'active' => true, 'item_count' => 40, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Administration', 'description' => 'Office and management', 'manager' => 'Carmen Lopez', 'active' => true, 'item_count' => 18, 'created_at' => now(), 'updated_at' => now()],
-        ]);
+        // ─── Departments ───
+        $deptIds = [];
+        foreach ([
+            ['name' => 'Front Office', 'description' => 'Reception, concierge, and guest services', 'manager' => 'Maria Santos'],
+            ['name' => 'Housekeeping', 'description' => 'Room cleaning, laundry, and linen management', 'manager' => 'Juan Dela Cruz'],
+            ['name' => 'Food & Beverage', 'description' => 'Restaurant, bar, and room service', 'manager' => 'Ana Reyes'],
+            ['name' => 'Kitchen', 'description' => 'Food preparation and cooking operations', 'manager' => 'Carlos Garcia'],
+            ['name' => 'Maintenance', 'description' => 'Facility repairs, electrical, and plumbing', 'manager' => 'Roberto Cruz'],
+            ['name' => 'Laundry', 'description' => 'Guest linen and uniform cleaning', 'manager' => 'Elena Torres'],
+            ['name' => 'Security', 'description' => 'Property surveillance and guest safety', 'manager' => 'Miguel Ramos'],
+            ['name' => 'Administration', 'description' => 'Office management and HR', 'manager' => 'Carmen Lopez'],
+        ] as $d) {
+            $deptIds[$d['name']] = Department::create($d)->id;
+        }
 
-        // Suppliers
-        Supplier::insert([
-            ['name' => 'Premium Linens Inc.', 'contact_person' => 'John Smith', 'phone' => '+63 917 123 4567', 'email' => 'john@premiumlinens.com', 'total_purchases' => 450000, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Spa Essentials Co.', 'contact_person' => 'Mary Johnson', 'phone' => '+63 918 234 5678', 'email' => 'mary@spaessentials.com', 'total_purchases' => 280000, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Maintenance Supplies Hub', 'contact_person' => 'Robert Brown', 'phone' => '+63 919 345 6789', 'email' => 'robert@maintenancehub.com', 'total_purchases' => 320000, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Fresh Foods Distributor', 'contact_person' => 'Lisa Davis', 'phone' => '+63 920 456 7890', 'email' => 'lisa@freshfoods.com', 'total_purchases' => 850000, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Beverage Solutions', 'contact_person' => 'David Wilson', 'phone' => '+63 921 567 8901', 'email' => 'david@beveragesolutions.com', 'total_purchases' => 380000, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Hotel Furnishings Ltd.', 'contact_person' => 'Sarah Martinez', 'phone' => '+63 922 678 9012', 'email' => 'sarah@hotelfurnishings.com', 'total_purchases' => 620000, 'created_at' => now(), 'updated_at' => now()],
-        ]);
+        // ─── Suppliers ───
+        $supplierIds = [];
+        foreach ([
+            ['name' => 'Premium Linens Inc.', 'contact_person' => 'John Smith', 'phone' => '+63 917 123 4567', 'email' => 'john@premiumlinens.com', 'total_purchases' => 450000],
+            ['name' => 'Spa Essentials Co.', 'contact_person' => 'Mary Johnson', 'phone' => '+63 918 234 5678', 'email' => 'mary@spaessentials.com', 'total_purchases' => 280000],
+            ['name' => 'Maintenance Hub', 'contact_person' => 'Robert Brown', 'phone' => '+63 919 345 6789', 'email' => 'robert@maintenancehub.com', 'total_purchases' => 320000],
+            ['name' => 'Fresh Foods Distributor', 'contact_person' => 'Lisa Davis', 'phone' => '+63 920 456 7890', 'email' => 'lisa@freshfoods.com', 'total_purchases' => 850000],
+            ['name' => 'Beverage Solutions', 'contact_person' => 'David Wilson', 'phone' => '+63 921 567 8901', 'email' => 'david@beveragesolutions.com', 'total_purchases' => 380000],
+            ['name' => 'Hotel Furnishings Ltd.', 'contact_person' => 'Sarah Martinez', 'phone' => '+63 922 678 9012', 'email' => 'sarah@hotelfurnishings.com', 'total_purchases' => 620000],
+        ] as $s) {
+            $supplierIds[$s['name']] = Supplier::create($s)->id;
+        }
 
-        // Items
-        Item::insert([
-            ['name' => 'Bed Sheets (Queen)', 'category' => 'Linen', 'department_id' => 2, 'supplier_id' => 1, 'current_stock' => 150, 'min_stock' => 50, 'unit' => 'pieces', 'purchase_cost' => 450, 'selling_price' => 0, 'expiry_date' => null, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Towels (Bath)', 'category' => 'Linen', 'department_id' => 2, 'supplier_id' => 1, 'current_stock' => 200, 'min_stock' => 80, 'unit' => 'pieces', 'purchase_cost' => 180, 'selling_price' => 0, 'expiry_date' => null, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Shampoo Bottles', 'category' => 'Toiletries', 'department_id' => 2, 'supplier_id' => 2, 'current_stock' => 300, 'min_stock' => 100, 'unit' => 'bottles', 'purchase_cost' => 45, 'selling_price' => 0, 'expiry_date' => '2025-12-31', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Cleaning Solution', 'category' => 'Chemicals', 'department_id' => 2, 'supplier_id' => 3, 'current_stock' => 25, 'min_stock' => 30, 'unit' => 'liters', 'purchase_cost' => 350, 'selling_price' => 0, 'expiry_date' => '2025-06-30', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Rice (Premium)', 'category' => 'Food', 'department_id' => 4, 'supplier_id' => 4, 'current_stock' => 500, 'min_stock' => 200, 'unit' => 'kg', 'purchase_cost' => 55, 'selling_price' => 0, 'expiry_date' => '2024-12-31', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Chicken Breast', 'category' => 'Food', 'department_id' => 4, 'supplier_id' => 4, 'current_stock' => 80, 'min_stock' => 50, 'unit' => 'kg', 'purchase_cost' => 280, 'selling_price' => 0, 'expiry_date' => '2024-06-15', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Coffee Beans', 'category' => 'Beverage', 'department_id' => 3, 'supplier_id' => 5, 'current_stock' => 40, 'min_stock' => 20, 'unit' => 'kg', 'purchase_cost' => 850, 'selling_price' => 0, 'expiry_date' => '2025-03-31', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Wine Glasses', 'category' => 'Glassware', 'department_id' => 3, 'supplier_id' => 6, 'current_stock' => 120, 'min_stock' => 50, 'unit' => 'pieces', 'purchase_cost' => 95, 'selling_price' => 0, 'expiry_date' => null, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Light Bulbs (LED)', 'category' => 'Electrical', 'department_id' => 5, 'supplier_id' => 3, 'current_stock' => 80, 'min_stock' => 40, 'unit' => 'pieces', 'purchase_cost' => 120, 'selling_price' => 0, 'expiry_date' => null, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Paint (White)', 'category' => 'Maintenance', 'department_id' => 5, 'supplier_id' => 3, 'current_stock' => 15, 'min_stock' => 10, 'unit' => 'gallons', 'purchase_cost' => 650, 'selling_price' => 0, 'expiry_date' => null, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Massage Oil', 'category' => 'Spa Supplies', 'department_id' => 8, 'supplier_id' => 2, 'current_stock' => 35, 'min_stock' => 15, 'unit' => 'bottles', 'purchase_cost' => 450, 'selling_price' => 0, 'expiry_date' => '2025-09-30', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Banquet Chairs', 'category' => 'Furniture', 'department_id' => 9, 'supplier_id' => 6, 'current_stock' => 200, 'min_stock' => 150, 'unit' => 'pieces', 'purchase_cost' => 1200, 'selling_price' => 0, 'expiry_date' => null, 'created_at' => now(), 'updated_at' => now()],
-        ]);
+        $hk = $deptIds['Housekeeping'];
+        $kitchen = $deptIds['Kitchen'];
+        $fnb = $deptIds['Food & Beverage'];
+        $maint = $deptIds['Maintenance'];
+        $laundry = $deptIds['Laundry'];
+        $admin = $deptIds['Administration'];
+        $fo = $deptIds['Front Office'];
 
-        // Movements
-        Movement::insert([
-            ['item_id' => 1, 'type' => 'IN', 'quantity' => 50, 'from_department' => null, 'to_department' => 2, 'reason' => null, 'user' => 'Admin', 'notes' => 'Monthly stock replenishment', 'date' => '2024-06-01 10:00:00', 'created_at' => now(), 'updated_at' => now()],
-            ['item_id' => 3, 'type' => 'OUT', 'quantity' => 20, 'from_department' => 2, 'to_department' => null, 'reason' => 'Usage', 'user' => 'Juan Dela Cruz', 'notes' => 'Daily room service', 'date' => '2024-06-02 14:30:00', 'created_at' => now(), 'updated_at' => now()],
-            ['item_id' => 5, 'type' => 'IN', 'quantity' => 200, 'from_department' => null, 'to_department' => 4, 'reason' => null, 'user' => 'Admin', 'notes' => 'Weekly food delivery', 'date' => '2024-06-03 09:00:00', 'created_at' => now(), 'updated_at' => now()],
-            ['item_id' => 7, 'type' => 'TRANSFER', 'quantity' => 5, 'from_department' => 3, 'to_department' => 4, 'reason' => 'Kitchen requested additional coffee', 'user' => 'Ana Reyes', 'notes' => 'Cross-dept transfer', 'date' => '2024-06-04 11:00:00', 'created_at' => now(), 'updated_at' => now()],
-            ['item_id' => 9, 'type' => 'OUT', 'quantity' => 10, 'from_department' => 5, 'to_department' => null, 'reason' => 'Usage', 'user' => 'Roberto Cruz', 'notes' => 'Replaced burnt bulbs in lobby', 'date' => '2024-06-05 16:00:00', 'created_at' => now(), 'updated_at' => now()],
-            ['item_id' => 12, 'type' => 'IN', 'quantity' => 50, 'from_department' => null, 'to_department' => 9, 'reason' => null, 'user' => 'Admin', 'notes' => 'New banquet furniture delivery', 'date' => '2024-06-06 08:00:00', 'created_at' => now(), 'updated_at' => now()],
-        ]);
+        $pl = $supplierIds['Premium Linens Inc.'];
+        $sec = $supplierIds['Spa Essentials Co.'];
+        $mh = $supplierIds['Maintenance Hub'];
+        $ffd = $supplierIds['Fresh Foods Distributor'];
+        $bs = $supplierIds['Beverage Solutions'];
+        $hfl = $supplierIds['Hotel Furnishings Ltd.'];
 
-        // Bills
-        Bill::insert([
-            ['type' => 'Electricity', 'provider' => 'Manila Electric Company', 'account_number' => 'MERALCO-12345', 'amount' => 85000, 'due_date' => '2024-06-15', 'status' => 'Pending', 'billing_period' => 'May 2024', 'payment_date' => null, 'payment_method' => null, 'payment_reference' => null, 'notes' => null, 'created_at' => now(), 'updated_at' => now()],
-            ['type' => 'Water', 'provider' => 'Manila Water', 'account_number' => 'MW-67890', 'amount' => 12500, 'due_date' => '2024-06-10', 'status' => 'Paid', 'billing_period' => 'May 2024', 'payment_date' => '2024-06-08', 'payment_method' => 'Bank Transfer', 'payment_reference' => 'BT-2024-001', 'notes' => null, 'created_at' => now(), 'updated_at' => now()],
-            ['type' => 'Internet', 'provider' => 'PLDT Fibr', 'account_number' => 'PLDT-54321', 'amount' => 8500, 'due_date' => '2024-06-20', 'status' => 'Pending', 'billing_period' => 'June 2024', 'payment_date' => null, 'payment_method' => null, 'payment_reference' => null, 'notes' => null, 'created_at' => now(), 'updated_at' => now()],
-            ['type' => 'Telephone', 'provider' => 'Globe Telecom', 'account_number' => 'GLOBE-98765', 'amount' => 4200, 'due_date' => '2024-06-05', 'status' => 'Overdue', 'billing_period' => 'May 2024', 'payment_date' => null, 'payment_method' => null, 'payment_reference' => null, 'notes' => null, 'created_at' => now(), 'updated_at' => now()],
-            ['type' => 'Gas', 'provider' => 'Petron LPG', 'account_number' => 'PETRON-11111', 'amount' => 15000, 'due_date' => '2024-06-25', 'status' => 'Pending', 'billing_period' => 'June 2024', 'payment_date' => null, 'payment_method' => null, 'payment_reference' => null, 'notes' => null, 'created_at' => now(), 'updated_at' => now()],
-            ['type' => 'Maintenance', 'provider' => 'Elite Facility Services', 'account_number' => 'EFS-22222', 'amount' => 35000, 'due_date' => '2024-06-30', 'status' => 'Pending', 'billing_period' => 'June 2024', 'payment_date' => null, 'payment_method' => null, 'payment_reference' => null, 'notes' => null, 'created_at' => now(), 'updated_at' => now()],
-            ['type' => 'Insurance', 'provider' => 'Philippine Insurance Co.', 'account_number' => 'PIC-33333', 'amount' => 45000, 'due_date' => '2024-06-01', 'status' => 'Paid', 'billing_period' => 'Q2 2024', 'payment_date' => '2024-05-28', 'payment_method' => 'Check', 'payment_reference' => 'CHK-2024-002', 'notes' => null, 'created_at' => now(), 'updated_at' => now()],
-            ['type' => 'Rent', 'provider' => 'Property Holdings Inc.', 'account_number' => 'PHI-44444', 'amount' => 250000, 'due_date' => '2024-06-01', 'status' => 'Paid', 'billing_period' => 'June 2024', 'payment_date' => '2024-05-30', 'payment_method' => 'Bank Transfer', 'payment_reference' => 'BT-2024-003', 'notes' => null, 'created_at' => now(), 'updated_at' => now()],
-        ]);
+        // ─── Items ───
+        $itemData = [
+            ['Bed Sheets (Queen)', 'Linen', $hk, $pl, 120, 50, 'pcs', 450, 0, null],
+            ['Bed Sheets (King)', 'Linen', $hk, $pl, 80, 30, 'pcs', 550, 0, null],
+            ['Pillow Cases', 'Linen', $hk, $pl, 200, 80, 'pcs', 120, 0, null],
+            ['Bath Towels', 'Linen', $hk, $pl, 180, 80, 'pcs', 180, 0, null],
+            ['Hand Towels', 'Linen', $hk, $pl, 150, 60, 'pcs', 95, 0, null],
+            ['Shampoo (Mini)', 'Toiletries', $hk, $sec, 500, 200, 'bottles', 35, 0, '2026-12-31'],
+            ['Conditioner (Mini)', 'Toiletries', $hk, $sec, 400, 150, 'bottles', 35, 0, '2026-12-31'],
+            ['Soap Bars', 'Toiletries', $hk, $sec, 600, 200, 'pcs', 20, 0, '2027-06-30'],
+            ['Toilet Paper (Case)', 'Supplies', $hk, $sec, 45, 20, 'cases', 450, 0, null],
+            ['All-Purpose Cleaner', 'Chemicals', $hk, $mh, 12, 20, 'liters', 280, 0, null],          // LOW STOCK
+            ['Bleach', 'Chemicals', $laundry, $mh, 8, 15, 'liters', 180, 0, null],                     // LOW STOCK
+            ['Rice (Premium, 50kg)', 'Food', $kitchen, $ffd, 10, 5, 'bags', 2750, 0, null],
+            ['Chicken Breast', 'Food', $kitchen, $ffd, 35, 40, 'kg', 280, 0, '2026-05-25'],            // LOW + expiring
+            ['Cooking Oil', 'Food', $kitchen, $ffd, 25, 15, 'liters', 220, 0, null],
+            ['Coffee Beans (Arabica)', 'Beverage', $fnb, $bs, 18, 15, 'kg', 850, 0, '2026-08-31'],    // LOW STOCK
+            ['Bottled Water (Case)', 'Beverage', $fnb, $bs, 60, 25, 'cases', 240, 0, null],
+            ['Wine Glasses', 'Glassware', $fnb, $hfl, 95, 50, 'pcs', 95, 0, null],
+            ['LED Light Bulbs', 'Electrical', $maint, $mh, 40, 30, 'pcs', 120, 0, null],
+            ['White Paint (Gallon)', 'Maintenance', $maint, $mh, 8, 10, 'gal', 650, 0, null],          // LOW STOCK
+            ['Printer Paper (Ream)', 'Office', $admin, $hfl, 25, 10, 'reams', 250, 0, null],
+            ['Ballpen (Box)', 'Office', $admin, $hfl, 15, 10, 'boxes', 180, 0, null],
+            ['USB-C Cables', 'Electronics', $fo, $hfl, 5, 10, 'pcs', 350, 0, null],                   // LOW STOCK
+            ['Pens (Promo)', 'Office', $fo, $hfl, 200, 50, 'pcs', 15, 25, null],
+        ];
 
-        // Settings (single row)
+        $itemIds = [];
+        foreach ($itemData as $i => $row) {
+            $item = Item::create([
+                'name'          => $row[0],
+                'category'      => $row[1],
+                'department_id' => $row[2],
+                'supplier_id'   => $row[3],
+                'current_stock' => $row[4],
+                'min_stock'     => $row[5],
+                'unit'          => $row[6],
+                'purchase_cost' => $row[7],
+                'selling_price' => $row[8],
+                'expiry_date'   => $row[9],
+            ]);
+            $itemIds[$row[0]] = $item->id;
+        }
+
+        // ─── Movements ───
+        $movements = [
+            // Housekeeping linen stock-up
+            [1, 'IN', 60,  null, $hk, 'Monthly replenishment', 'Admin',   '2026-04-01 09:00:00'],
+            [3, 'IN', 100, null, $hk, 'Monthly replenishment', 'Admin',   '2026-04-01 09:00:00'],
+            [4, 'IN', 80,  null, $hk, 'Monthly replenishment', 'Admin',   '2026-04-01 09:00:00'],
+            // Usage — towels used in rooms
+            [4, 'OUT', 20, $hk,  null, 'Daily room service',   'Juan',    '2026-04-05 14:30:00'],
+            [5, 'OUT', 15, $hk,  null, 'Daily room service',   'Juan',    '2026-04-05 14:30:00'],
+            // Food deliveries
+            [12,'IN', 5,  null, $kitchen, 'Weekly rice delivery',   'Carlos',  '2026-04-03 08:00:00'],
+            [13,'IN', 30, null, $kitchen, 'Daily chicken delivery', 'Carlos',  '2026-04-03 08:00:00'],
+            [14,'IN', 20, null, $kitchen, 'Cooking oil restock',    'Carlos',  '2026-04-03 08:00:00'],
+            // Food usage
+            [13,'OUT', 15, $kitchen, null, 'Used for lunch service', 'Carlos',  '2026-04-04 15:00:00'],
+            // Coffee consumed
+            [15,'OUT', 7,  $fnb,    null, 'Restaurant consumption',  'Ana',     '2026-04-06 11:00:00'],
+            // Cross-dept transfer: coffee to kitchen
+            [15,'TRANSFER', 5, $fnb, $kitchen, 'Kitchen needed extra', 'Ana',   '2026-04-08 10:00:00'],
+            // Maintenance usage
+            [18,'OUT', 10, $maint,  null, 'Lobby bulb replacement',  'Roberto', '2026-04-07 16:00:00'],
+            [19,'OUT', 2,  $maint,  null, 'Hallway repaint',         'Roberto', '2026-04-07 16:00:00'],
+            // Cleaning supplies usage
+            [10,'OUT', 5,  $hk,     null, 'Daily cleaning',          'Juan',    '2026-04-09 07:00:00'],
+            [11,'OUT', 4,  $laundry, null, 'Linen bleaching',        'Elena',   '2026-04-09 08:00:00'],
+        ];
+
+        foreach ($movements as $m) {
+            Movement::create([
+                'item_id'         => $m[0],
+                'type'            => $m[1],
+                'quantity'        => $m[2],
+                'from_department' => $m[3],
+                'to_department'   => $m[4],
+                'notes'           => $m[5],
+                'user'            => $m[6],
+                'date'            => $m[7],
+            ]);
+        }
+
+        // ─── Bills ───
+        $bills = [
+            ['Electricity', 'Meralco',              'MER-12345', 87500.00, '2026-05-25', 'Pending',  'April 2026',  null, null, null],
+            ['Electricity', 'Meralco',              'MER-12345', 92300.00, '2026-04-25', 'Paid',     'March 2026',  '2026-04-20', 'Bank Transfer', 'BT-2026-012'],
+            ['Water',      'Manila Water',           'MW-67890',  14200.00, '2026-05-15', 'Pending',  'April 2026',  null, null, null],
+            ['Water',      'Manila Water',           'MW-67890',  12800.00, '2026-04-15', 'Paid',     'March 2026',  '2026-04-10', 'Bank Transfer', 'BT-2026-010'],
+            ['Internet',   'PLDT Fiber',             'PLDT-54321', 8500.00, '2026-05-20', 'Pending',  'May 2026',    null, null, null],
+            ['Internet',   'PLDT Fiber',             'PLDT-54321', 8500.00, '2026-04-20', 'Paid',     'April 2026',  '2026-04-15', 'Auto-Debit',    'AD-2026-005'],
+            ['Telephone',  'Globe Telecom',          'GLOBE-98765',5200.00, '2026-04-30', 'Overdue',  'March 2026',  null, null, null],
+            ['Telephone',  'Globe Telecom',          'GLOBE-98765',4800.00, '2026-03-31', 'Overdue',  'February 2026',null,null, null],
+            ['Gas (LPG)',  'Petron Corp',            'PET-11111', 18000.00, '2026-05-28', 'Pending',  'May 2026',    null, null, null],
+            ['Gas (LPG)',  'Petron Corp',            'PET-11111', 15500.00, '2026-04-28', 'Paid',     'April 2026',  '2026-04-22', 'Check',         'CHK-2026-008'],
+            ['Maintenance','Elite Facility Services','EFS-22222', 45000.00, '2026-05-30', 'Pending',  'May 2026',    null, null, null],
+            ['Insurance',  'Pioneer Insurance',      'PI-33333',  55000.00, '2026-05-01', 'Paid',     'Q2 2026',     '2026-04-28', 'Bank Transfer', 'BT-2026-014'],
+            ['Rent',       'GCHR Properties Inc.',   'GCHR-44444',250000.00,'2026-05-01', 'Paid',     'May 2026',    '2026-04-28', 'Bank Transfer', 'BT-2026-015'],
+            ['Rent',       'GCHR Properties Inc.',   'GCHR-44444',250000.00,'2026-06-01', 'Pending',  'June 2026',   null, null, null],
+            ['Waste Mgmt', 'EcoWaste Solutions',     'EWS-55555',  8500.00, '2026-05-10', 'Pending',  'April 2026',  null, null, null],
+        ];
+
+        foreach ($bills as $b) {
+            Bill::create([
+                'type'             => $b[0],
+                'provider'         => $b[1],
+                'account_number'   => $b[2],
+                'amount'           => $b[3],
+                'due_date'         => $b[4],
+                'status'           => $b[5],
+                'billing_period'   => $b[6],
+                'payment_date'     => $b[7],
+                'payment_method'   => $b[8],
+                'payment_reference'=> $b[9],
+            ]);
+        }
+
+        // ─── Settings ───
         Setting::create([
-            'hotel_name' => 'Grand Creek Hotel & Resort',
-            'currency' => 'PHP',
-            'low_stock_threshold' => 30,
-            'bill_alert_days' => 7,
-            'notifications' => [
-                'low_stock' => true,
-                'bill_due' => true,
-                'overdue_bill' => true,
-                'purchase_approval' => true,
+            'hotel_name'        => 'Grand Creek Hotel & Resort',
+            'currency'          => 'PHP',
+            'low_stock_threshold' => 20,
+            'bill_alert_days'    => 7,
+            'notifications'      => [
+                'low_stock'        => true,
+                'bill_due'         => true,
+                'overdue_bill'     => true,
+                'purchase_approval'=> false,
             ],
         ]);
     }
