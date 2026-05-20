@@ -8,6 +8,7 @@ use App\Http\Controllers\MovementController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/bills/{bill}/pay', [BillController::class, 'pay'])->name('bills.pay');
     Route::resource('suppliers', SupplierController::class);
     Route::resource('employees', EmployeeController::class);
+    Route::resource('payrolls', PayrollController::class);
+    Route::post('/payrolls/batch-create', [PayrollController::class, 'batchCreate'])->name('payrolls.batch-create');
+    Route::post('/payrolls/{payroll}/approve', [PayrollController::class, 'approve'])->name('payrolls.approve');
+    Route::post('/payrolls/{payroll}/pay', [PayrollController::class, 'pay'])->name('payrolls.pay');
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');

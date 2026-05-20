@@ -86,14 +86,13 @@
 
 ---
 
-## 1️⃣1️⃣ Payroll ⬅️ NEXT
-
-## 1️⃣1️⃣ Payroll
-- **Model:** Payroll.php — id, employee_id, period_start, period_end, gross_pay, deductions, net_pay, status, paid_at, created_at
-- **Backend:** ❌ Need CRUD + batch generate
-- **Views:** ❌ Need list + generate form
-- **Migrations:** ❌ Need `create_payrolls_table`
-- **Note:** Can be built after Employees
+## 1️⃣1️⃣ Payroll ✅
+- **Model:** Payroll.php — id, employee_id, period_start, period_end, work_days, gross_pay, deductions, net_pay, status (draft/pending/paid/cancelled), paid_at, notes
+- **Backend:** ✅ Full CRUD + batch generate, approve (draft→pending), pay (pending→paid)
+- **Views:** ✅ List table with period/status/employee filters + create (with auto-calc) + edit + show (pay breakdown) + batch generate modal
+- **Migrations:** ✅ `create_payrolls_table`
+- **Seeds:** ✅ 13 records (6 paid, 6 pending, 1 draft) across 7 employees
+- **Note:** Net pay = gross pay - deductions; auto-calc uses (salary/22) × work_days, 10% standard deduction
 
 ---
 
@@ -152,7 +151,7 @@
 | 8 | Settings | ✅ | Done | Done | Done |
 | 9 | Auth | 🟡 | Basic | Basic | Done |
 | 10 | **HR/Employees** | ✅ | Done | Done | Done |
-| 11 | **Payroll** | ❌ | — | — | — |
+| 11 | **Payroll** | ✅ | Done | Done | Done |
 | 12 | **Rooms** | ❌ | — | — | — |
 | 13 | **Bookings** | ❌ | — | — | — |
 | 14 | **POS** | ❌ | — | — | — |

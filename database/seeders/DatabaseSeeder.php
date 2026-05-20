@@ -10,6 +10,7 @@ use App\Models\Movement;
 use App\Models\Bill;
 use App\Models\Setting;
 use App\Models\Employee;
+use App\Models\Payroll;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -232,5 +233,42 @@ class DatabaseSeeder extends Seeder
                 'status'            => 'active',
             ]);
         }
+
+        // ─── Payroll Records ───
+        $payrollEmployees = Employee::whereIn('employee_id', ['EMP-001','EMP-002','EMP-005','EMP-007','EMP-009','EMP-011'])->get();
+        $periods = [
+            ['2026-04-01', '2026-04-15', 12],
+            ['2026-04-16', '2026-04-30', 13],
+        ];
+        foreach ($periods as $period) {
+            foreach ($payrollEmployees as $emp) {
+                $daily = $emp->salary / 22;
+                $gross = round($daily * $period[2], 2);
+                $deductions = round($gross * 0.10, 2);
+                $net = $gross - $deductions;
+                Payroll::create([
+                    'employee_id'  => $emp->id,
+                    'period_start' => $period[0],
+                    'period_end'   => $period[1],
+                    'work_days'    => $period[2],
+                    'gross_pay'    => $gross,
+                    'deductions'   => $deductions,
+                    'net_pay'      => $net,
+                    'status'       => $period[1] === '2026-04-15' ? 'paid' : 'pending',
+                    'paid_at'      => $period[1] === '2026-04-15' ? '2026-04-14 17:00:00' : null,
+                ]);
+            }
+        }
+        // Add one draft record
+        Payroll::create([
+            'employee_id'  => Employee::where('employee_id', 'EMP-003')->first()->id,
+            'period_start' => '2026-05-01',
+            'period_end'   => '2026-05-15',
+            'work_days'    => 11,
+            'gross_pay'    => 14000,
+            'deductions'   => 1400,
+            'net_pay'      => 12600,
+            'status'       => 'draft',
+        ]);
     }
 }
