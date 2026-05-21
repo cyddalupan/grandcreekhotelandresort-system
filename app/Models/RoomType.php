@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class RoomType extends Model
 {
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
+
     protected $fillable = [
         'name',
         'description',
@@ -37,7 +39,11 @@ class RoomType extends Model
 
     public function getAmenitiesListAttribute()
     {
-        if (!$this->amenities) return [];
-        return is_array($this->amenities) ? $this->amenities : json_decode($this->amenities, true);
+        $amenities = $this->amenities;
+        if (!$amenities) {
+            return '';
+        }
+        $list = is_array($amenities) ? $amenities : json_decode($amenities, true);
+        return is_array($list) ? implode(', ', $list) : '';
     }
 }

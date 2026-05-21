@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Setting extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'hotel_name', 'currency', 'low_stock_threshold',
         'bill_alert_days', 'notifications',

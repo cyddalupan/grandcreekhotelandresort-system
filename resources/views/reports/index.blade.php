@@ -5,9 +5,18 @@
 
 @section('content')
 <div class="space-y-4 md:space-y-6">
-    <div>
-        <h1 class="text-2xl md:text-3xl font-bold text-blue-900">Reports</h1>
-        <p class="text-sm md:text-base text-gray-600">Hotel performance overview</p>
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+        <div>
+            <h1 class="text-2xl md:text-3xl font-bold text-blue-900">Reports</h1>
+            <p class="text-sm md:text-base text-gray-600">Hotel performance overview</p>
+        </div>
+        <a href="{{ route('reports.export-csv') }}" 
+           class="inline-flex items-center justify-center px-4 py-2 bg-green-700 hover:bg-green-600 text-white text-sm font-medium rounded-lg transition-colors w-full sm:w-auto">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            Export CSV
+        </a>
     </div>
 
     <!-- Summary Cards -->
