@@ -159,8 +159,8 @@
 | 12 | **Rooms / Types** | ✅ | Done | Done | Done | 24 rooms, 4 types
 | 13 | **Bookings** | ✅ | Done | Done | Done | 9 sample bookings |
 | 14 | **POS** | ✅ | Done | Done | Done | 5 sample sales, 4 payment methods
-| 15 | **Purchase Orders** | ❌ | — | — | — |
-| 16 | **Housekeeping** | ❌ | — | — | — |
+| 15 | **Purchase Orders** | ✅ | Done | Done | Done | 3 sample POs (draft/approved/received) |
+| 16 | **Housekeeping** | ✅ | Done | Done | Done | 6 sample tasks |
 
 ---
 

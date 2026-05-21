@@ -9,6 +9,8 @@ use App\Models\Item;
 use App\Models\Movement;
 use App\Models\Bill;
 use App\Models\Sale;
+use App\Models\PurchaseOrder;
+use App\Models\Housekeeping;
 use App\Models\Setting;
 use App\Models\Employee;
 use App\Models\Payroll;
@@ -410,6 +412,97 @@ class DatabaseSeeder extends Seeder
                 'user_id'         => 1,
                 'created_at'      => now()->subHours(rand(1,8)),
             ]);
+        }
+
+        // ─── Purchase Orders ───
+        $poItems1 = json_encode([
+            ['name'=>'Bed Sheets (Queen)', 'qty'=>30, 'unit'=>'pcs', 'unit_price'=>450, 'total'=>13500],
+            ['name'=>'Bath Towels', 'qty'=>50, 'unit'=>'pcs', 'unit_price'=>180, 'total'=>9000],
+            ['name'=>'Pillow Cases', 'qty'=>40, 'unit'=>'pcs', 'unit_price'=>120, 'total'=>4800],
+        ]);
+        PurchaseOrder::create([
+            'po_number'    => 'PO-260521-001',
+            'supplier_id'  => $supplierIds['Premium Linens Inc.'],
+            'items'        => json_decode($poItems1, true),
+            'total_amount' => 27300,
+            'status'       => 'received',
+            'notes'        => 'Monthly linen restock - received in full',
+            'created_by'   => 1,
+            'approved_by'  => 1,
+            'approved_at'  => now()->subDays(5),
+            'received_at'  => now()->subDays(3),
+            'created_at'   => now()->subDays(7),
+        ]);
+
+        $poItems2 = json_encode([
+            ['name'=>'Shampoo (Mini)', 'qty'=>100, 'unit'=>'bottles', 'unit_price'=>35, 'total'=>3500],
+            ['name'=>'Conditioner (Mini)', 'qty'=>80, 'unit'=>'bottles', 'unit_price'=>35, 'total'=>2800],
+            ['name'=>'Soap Bars', 'qty'=>200, 'unit'=>'pcs', 'unit_price'=>20, 'total'=>4000],
+        ]);
+        $po2 = PurchaseOrder::create([
+            'po_number'    => 'PO-260521-002',
+            'supplier_id'  => $supplierIds['Spa Essentials Co.'],
+            'items'        => json_decode($poItems2, true),
+            'total_amount' => 10300,
+            'status'       => 'approved',
+            'notes'        => 'Toiletries replenishment',
+            'created_by'   => 1,
+            'approved_by'  => 1,
+            'approved_at'  => now()->subDays(1),
+            'created_at'   => now()->subDays(2),
+        ]);
+
+        $poItems3 = json_encode([
+            ['name'=>'Rice (Premium, 50kg)', 'qty'=>5, 'unit'=>'bags', 'unit_price'=>2750, 'total'=>13750],
+            ['name'=>'Chicken Breast', 'qty'=>20, 'unit'=>'kg', 'unit_price'=>280, 'total'=>5600],
+            ['name'=>'Cooking Oil', 'qty'=>10, 'unit'=>'liters', 'unit_price'=>220, 'total'=>2200],
+        ]);
+        PurchaseOrder::create([
+            'po_number'    => 'PO-260521-003',
+            'supplier_id'  => $supplierIds['Fresh Foods Distributor'],
+            'items'        => json_decode($poItems3, true),
+            'total_amount' => 21550,
+            'status'       => 'draft',
+            'notes'        => 'Kitchen weekly order',
+            'created_by'   => 1,
+            'created_at'   => now(),
+        ]);
+
+        // ─── Housekeeping Tasks ───
+        $roomIds = Room::pluck('id', 'room_number');
+        $empIds = Employee::whereIn('employee_id', ['EMP-003','EMP-004','EMP-014'])->pluck('id');
+        $empList = $empIds->values();
+        $adminUser = User::first();
+
+        $hkTasks = [
+            ['101', 'cleaning', 'normal',    now()->subDay(),   now()->subDay()->addHours(2), $empList[0]],
+            ['202', 'cleaning', 'high',      now()->subDay(),   now()->subDay()->addHours(3), $empList[1]],
+            ['301', 'turndown', 'normal',    now(),             null,                          $empList[0]],
+            ['401', 'deep_clean','urgent',   now(),             null,                          null],
+            ['104', 'inspection','high',     now()->addDay(),   null,                          $empList[2]],
+            ['203', 'maintenance','urgent',  now(),             null,                          $empList[1]],
+        ];
+
+        foreach ($hkTasks as $t) {
+            $data = [
+                'room_id'        => $roomIds[$t[0]],
+                'task_type'      => $t[1],
+                'priority'       => $t[2],
+                'scheduled_date' => $t[3]->format('Y-m-d'),
+                'assigned_to'    => $t[5],
+                'notes'          => null,
+            ];
+
+            if ($t[4]) {
+                // Completed tasks
+                $data['status']       = 'completed';
+                $data['completed_at'] = $t[4];
+                $data['completed_by'] = 1;
+            } else {
+                $data['status'] = 'pending';
+            }
+
+            Housekeeping::create($data);
         }
     }
 }
