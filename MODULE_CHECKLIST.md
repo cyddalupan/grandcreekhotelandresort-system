@@ -125,19 +125,21 @@
 
 ---
 
-## 1️⃣5️⃣ Purchase Orders
+## 1️⃣5️⃣ Purchase Orders ✅
 - **Model:** PurchaseOrder.php — id, po_number, supplier_id, items JSON, total_amount, status (draft/approved/sent/received/cancelled), notes, created_by, approved_by, created_at
-- **Backend:** ❌ Need CRUD + approve/receive workflow
-- **Views:** ❌ Need PO form with line items, status timeline
-- **Migrations:** ❌ Need `create_purchase_orders_table`
+- **Backend:** ✅ Full CRUD + approve/send/receive workflow
+- **Views:** ✅ PO form with line items, status timeline badge, index with stats
+- **Migrations:** ✅ `create_purchase_orders_table`
+- **Seeds:** ✅ 3 sample POs (draft, approved, received)
 
 ---
 
-## 1️⃣6️⃣ Housekeeping
+## 1️⃣6️⃣ Housekeeping ✅
 - **Model:** Housekeeping.php — id, room_id, assigned_to, task_type (cleaning/maintenance/inspection), status (pending/in_progress/completed), notes, scheduled_date, completed_at, created_at
-- **Backend:** ❌ Need CRUD + assignment
-- **Views:** ❌ Need task board view
-- **Migrations:** ❌ Need `create_housekeeping_table`
+- **Backend:** ✅ Full CRUD + assignment
+- **Views:** ✅ Task board with priority/status/staff assignment, stats cards
+- **Migrations:** ✅ `create_housekeeping_table`
+- **Seeds:** ✅ 6 sample tasks across different statuses
 
 ---
 
