@@ -347,9 +347,17 @@ function posRegister() {
             .then(data => {
                 if (data.success) {
                     this.showCheckout = false;
+                    this.lastReceipt = data.receipt_number || '';
                     this.lastTotal = this.total;
                     this.showSuccess = true;
+                } else {
+                    const msg = data.message || data.errors?.items?.[0] || 'Sale could not be completed. Please check your inputs.';
+                    alert(msg);
                 }
+            })
+            .catch(err => {
+                alert('A network error occurred. Please try again.');
+                console.error('POS sale error:', err);
             });
         },
 

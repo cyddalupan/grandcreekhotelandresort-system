@@ -29,7 +29,7 @@ class PosController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'items'            => 'required|json',
+            'items'            => 'required',
             'subtotal'         => 'required|numeric|min:0',
             'tax_percent'      => 'required|numeric|min:0|max:100',
             'tax_amount'       => 'required|numeric|min:0',
@@ -41,9 +41,24 @@ class PosController extends Controller
             'notes'            => 'nullable|string|max:500',
         ]);
 
-        $items = json_decode($validated['items'], true);
+        // Accept items as either a JSON string (form-data) or an array (JSON body)
+        $items = is_string($validated['items'])
+            ? json_decode($validated['items'], true)
+            : $validated['items'];
 
-        DB::transaction(function () use ($items, $validated) {
+        if (!is_array($items)) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'The items field must be a valid JSON string or array.',
+                    'errors'  => ['items' => ['The items field must be a valid JSON string or array.']],
+                ], 422);
+            }
+            return back()->withErrors(['items' => 'The items field must be a valid JSON string or array.'])->withInput();
+        }
+
+        $sale = null;
+
+        DB::transaction(function () use ($items, $validated, &$sale) {
             $sale = Sale::create([
                 'receipt_number'   => Sale::generateReceiptNumber(),
                 'items'            => $items,
@@ -70,7 +85,11 @@ class PosController extends Controller
             }
         });
 
-        return response()->json(['success' => true]);
+        return response()->json([
+            'success'        => true,
+            'receipt_number' => $sale->receipt_number,
+            'total'          => (float) $sale->total,
+        ]);
     }
 
     public function show(Sale $sale)

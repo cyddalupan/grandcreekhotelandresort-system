@@ -35,8 +35,27 @@ class PosTest extends TestCase
         return array_merge([
             'items'           => json_encode([
                 ['item_id' => 1, 'name' => 'Soap', 'quantity' => 2, 'price' => 50, 'total' => 100],
-                ['name' => 'Coffee', 'quantity' => 1, 'price' => 120, 'total' => 120], // non-inventory (no item_id)
+                ['name' => 'Coffee', 'quantity' => 1, 'price' => 120, 'total' => 120],
             ]),
+            'subtotal'        => 220,
+            'tax_percent'     => 12,
+            'tax_amount'      => 26.40,
+            'discount'        => 0,
+            'total'           => 246.40,
+            'payment_method'  => 'cash',
+            'tendered_amount' => 300,
+            'change'          => 53.60,
+            'notes'           => 'Walk-in customer',
+        ], $overrides);
+    }
+
+    private function validSalePayloadJson(array $overrides = []): array
+    {
+        return array_merge([
+            'items'           => [
+                ['item_id' => 1, 'name' => 'Soap', 'quantity' => 2, 'price' => 50, 'total' => 100],
+                ['name' => 'Coffee', 'quantity' => 1, 'price' => 120, 'total' => 120],
+            ],
             'subtotal'        => 220,
             'tax_percent'     => 12,
             'tax_amount'      => 26.40,
@@ -105,7 +124,7 @@ class PosTest extends TestCase
         $response->assertStatus(200);
     }
 
-    // ── Store ──
+    // ── Store (form-data) ──
 
     public function test_store_creates_sale(): void
     {
@@ -187,13 +206,83 @@ class PosTest extends TestCase
         $response->assertSessionHasErrors('tax_percent');
     }
 
-    public function test_store_validates_json_items(): void
+    public function test_store_validates_items_as_json_or_array(): void
     {
         $response = $this->actingAs($this->user)->post(route('pos.store'), $this->validSalePayload([
             'items' => 'not-json',
         ]));
 
         $response->assertSessionHasErrors('items');
+    }
+
+    // ── Store (JSON request — matches how the Alpine frontend sends) ──
+
+    public function test_store_via_json_creates_sale_and_returns_receipt_number(): void
+    {
+        $response = $this->actingAs($this->user)
+            ->postJson(route('pos.store'), $this->validSalePayloadJson());
+
+        $response->assertStatus(200);
+        $response->assertJsonStructure(['success', 'receipt_number']);
+        $response->assertJson(['success' => true]);
+
+        $this->assertDatabaseHas('sales', [
+            'total'    => 246.40,
+            'user_id'  => $this->user->id,
+        ]);
+    }
+
+    public function test_store_via_json_accepts_items_as_array(): void
+    {
+        $response = $this->actingAs($this->user)
+            ->postJson(route('pos.store'), $this->validSalePayloadJson());
+
+        $response->assertStatus(200);
+        $response->assertJson(['success' => true]);
+    }
+
+    public function test_store_via_json_decrements_inventory(): void
+    {
+        $item = Item::factory()->create(['current_stock' => 10, 'selling_price' => 50, 'department_id' => $this->department->id, 'supplier_id' => $this->supplier->id]);
+
+        $this->actingAs($this->user)
+            ->postJson(route('pos.store'), $this->validSalePayloadJson([
+                'items' => [
+                    ['item_id' => $item->id, 'name' => 'Soap', 'quantity' => 2, 'price' => 50, 'total' => 100],
+                ],
+                'subtotal' => 100,
+                'tax_amount' => 12,
+                'total' => 112,
+                'tendered_amount' => 200,
+                'change' => 88,
+            ]));
+
+        $this->assertDatabaseHas('items', [
+            'id' => $item->id,
+            'current_stock' => 8,
+        ]);
+    }
+
+    public function test_store_via_json_validates_items_required(): void
+    {
+        $payload = $this->validSalePayloadJson(['items' => null]);
+
+        $response = $this->actingAs($this->user)
+            ->postJson(route('pos.store'), $payload);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('items');
+    }
+
+    public function test_store_via_json_validates_items_is_array(): void
+    {
+        $payload = $this->validSalePayloadJson(['items' => 'invalid-string']);
+
+        $response = $this->actingAs($this->user)
+            ->postJson(route('pos.store'), $payload);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('items');
     }
 
     // ── Show ──
