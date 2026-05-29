@@ -58,5 +58,17 @@
             </div>
         </form>
     </div>
+
+    <div class="mt-6 bg-white rounded-xl shadow-sm p-6 md:p-8 border-2 border-red-200">
+        <h2 class="text-lg font-bold text-red-700 mb-1">Danger Zone</h2>
+        <p class="text-sm text-gray-600 mb-4">Deleting this supplier will remove their record. Inventory items linked to this supplier will become unassigned.</p>
+        <form action="{{ route('suppliers.destroy', $supplier) }}" method="POST" onsubmit="return confirm('Delete supplier \"{{ addslashes($supplier->name) }}"? This action is permanent.')">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors">
+                Delete Supplier
+            </button>
+        </form>
+    </div>
 </div>
 @endsection

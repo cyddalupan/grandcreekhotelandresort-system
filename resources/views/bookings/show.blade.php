@@ -168,10 +168,12 @@
                 @if(!in_array($booking->status, ['checked_out', 'cancelled']))
                 <a href="{{ route('bookings.edit', $booking) }}" class="px-4 py-2 bg-blue-900 hover:bg-blue-800 text-white text-sm font-medium rounded-lg transition-colors">Edit Booking</a>
                 @endif
-                <form action="{{ route('bookings.destroy', $booking) }}" method="POST" class="inline" onsubmit="return confirm('Delete this booking?')">
+                @if(in_array($booking->status, ['pending', 'cancelled']))
+                <form action="{{ route('bookings.destroy', $booking) }}" method="POST" class="inline" onsubmit="return confirm('Delete booking for {{ addslashes($booking->guest_name) }} permanently? This cannot be undone.')">
                     @csrf @method('DELETE')
-                    <button type="submit" class="text-sm text-red-600 hover:text-red-800">Delete</button>
+                    <button type="submit" class="px-3 py-1.5 bg-red-100 hover:bg-red-200 text-red-700 text-sm font-medium rounded-lg transition-colors">Delete</button>
                 </form>
+                @endif
             </div>
         </div>
     </div>
