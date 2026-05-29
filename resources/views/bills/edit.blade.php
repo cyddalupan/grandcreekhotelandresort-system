@@ -115,5 +115,18 @@
             </div>
         </form>
     </div>
+
+    <!-- Danger Zone -->
+    <div class="mt-6 bg-white rounded-xl shadow-sm p-6 md:p-8 border-2 border-red-200">
+        <h2 class="text-lg font-bold text-red-700 mb-1">Danger Zone</h2>
+        <p class="text-sm text-gray-600 mb-4">Once deleted, this bill record cannot be recovered.</p>
+        <form action="{{ route('bills.destroy', $bill) }}" method="POST" onsubmit="return confirm('Delete {{ addslashes($bill->type) }} bill for ₱{{ number_format($bill->amount, 2) }}? This action is permanent.')">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors">
+                Delete Bill
+            </button>
+        </form>
+    </div>
 </div>
 @endsection

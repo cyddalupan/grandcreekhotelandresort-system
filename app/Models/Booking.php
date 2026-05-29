@@ -27,8 +27,8 @@ class Booking extends Model
     protected function casts(): array
     {
         return [
-            'check_in'    => 'date:Y-m-d',
-            'check_out'   => 'date:Y-m-d',
+            'check_in'    => 'date',
+            'check_out'   => 'date',
             'adults'      => 'integer',
             'children'    => 'integer',
             'total_amount'=> 'decimal:2',
@@ -55,7 +55,7 @@ class Booking extends Model
 
     public function nights()
     {
-        return max(0, $this->check_out->diffInDays($this->check_in));
+        return max(0, $this->check_in->diffInDays($this->check_out));
     }
 
     public function balance()

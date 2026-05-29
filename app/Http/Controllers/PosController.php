@@ -15,7 +15,15 @@ class PosController extends Controller
         $categories = Item::select('category')->distinct()->whereNotNull('category')->pluck('category');
         $items = Item::where('current_stock', '>', 0)->orderBy('name')->get();
         $recent = Sale::latest()->take(5)->get();
-        return view('pos.index', compact('categories', 'items', 'recent'));
+        $posItems = $items->map(fn($i) => [
+            'id'       => $i->id,
+            'name'     => $i->name,
+            'price'    => (float) $i->selling_price,
+            'stock'    => $i->current_stock,
+            'unit'     => $i->unit,
+            'category' => $i->category,
+        ])->values();
+        return view('pos.index', compact('categories', 'items', 'recent', 'posItems'));
     }
 
     public function store(Request $request)

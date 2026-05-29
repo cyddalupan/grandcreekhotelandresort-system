@@ -2,9 +2,9 @@
 
 namespace Tests\Unit;
 
+use App\Models\Booking;
 use App\Models\Room;
 use App\Models\RoomType;
-use App\Models\Booking;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -12,6 +12,8 @@ use Tests\TestCase;
 class RoomTest extends TestCase
 {
     use RefreshDatabase;
+
+    // ── Existing tests (preserved) ──
 
     public function test_room_belongs_to_room_type()
     {
@@ -108,8 +110,139 @@ class RoomTest extends TestCase
 
         $list = $roomType->getAmenitiesListAttribute();
 
-        $this->assertIsString($list);
-        $this->assertStringContainsString('WiFi', $list);
-        $this->assertStringContainsString('TV', $list);
+        $this->assertIsArray($list);
+        $this->assertContains('WiFi', $list);
+        $this->assertContains('TV', $list);
+    }
+
+    // ── New Room model tests ──
+
+    public function test_room_floor_is_casted_to_integer(): void
+    {
+        $room = Room::factory()->create(['floor' => 3]);
+
+        $this->assertIsInt($room->floor);
+        $this->assertEquals(3, $room->floor);
+    }
+
+    public function test_room_status_can_be_available(): void
+    {
+        $room = Room::factory()->create(['status' => 'available']);
+
+        $this->assertEquals('available', $room->status);
+    }
+
+    public function test_room_status_can_be_occupied(): void
+    {
+        $room = Room::factory()->create(['status' => 'occupied']);
+
+        $this->assertEquals('occupied', $room->status);
+    }
+
+    public function test_room_status_can_be_maintenance(): void
+    {
+        $room = Room::factory()->create(['status' => 'maintenance']);
+
+        $this->assertEquals('maintenance', $room->status);
+    }
+
+    public function test_room_notes_are_nullable(): void
+    {
+        $room = Room::factory()->create(['notes' => null]);
+
+        $this->assertNull($room->notes);
+    }
+
+    public function test_room_type_can_have_nullable_fields(): void
+    {
+        $roomType = RoomType::factory()->create([
+            'description' => null,
+            'icon' => null,
+        ]);
+
+        $this->assertNull($roomType->description);
+        $this->assertNull($roomType->icon);
+    }
+
+    public function test_room_type_is_active_defaults_true(): void
+    {
+        $roomType = RoomType::factory()->create();
+
+        $this->assertTrue($roomType->is_active);
+    }
+
+    public function test_room_type_can_be_inactive(): void
+    {
+        $roomType = RoomType::factory()->create(['is_active' => false]);
+
+        $this->assertFalse($roomType->is_active);
+    }
+
+    public function test_room_type_amenities_is_array_cast(): void
+    {
+        $roomType = RoomType::factory()->create([
+            'amenities' => ['WiFi', 'TV', 'Mini Bar'],
+        ]);
+
+        $this->assertIsArray($roomType->amenities);
+        $this->assertCount(3, $roomType->amenities);
+    }
+
+    public function test_room_type_has_many_rooms(): void
+    {
+        $roomType = RoomType::factory()->create();
+        Room::factory()->count(5)->create(['room_type_id' => $roomType->id]);
+
+        $this->assertCount(5, $roomType->rooms);
+    }
+
+    public function test_room_type_has_rooms_count(): void
+    {
+        $roomType = RoomType::factory()->create();
+        Room::factory()->count(3)->create(['room_type_id' => $roomType->id]);
+
+        $loadedWithCount = RoomType::withCount('rooms')->find($roomType->id);
+
+        $this->assertEquals(3, $loadedWithCount->rooms_count);
+    }
+
+    public function test_room_type_amenities_list_returns_empty_string_for_null(): void
+    {
+        $roomType = RoomType::factory()->create(['amenities' => null]);
+
+        $this->assertIsArray($roomType->getAmenitiesListAttribute());
+        $this->assertEmpty($roomType->getAmenitiesListAttribute());
+    }
+
+    public function test_room_type_amenities_list_returns_empty_string_for_empty_array(): void
+    {
+        $roomType = RoomType::factory()->create(['amenities' => []]);
+
+        $this->assertIsArray($roomType->getAmenitiesListAttribute());
+        $this->assertEmpty($roomType->getAmenitiesListAttribute());
+    }
+
+    public function test_room_can_have_cleaning_status(): void
+    {
+        $room = Room::factory()->create(['status' => 'cleaning']);
+
+        $this->assertEquals('cleaning', $room->status);
+    }
+
+    public function test_available_scope_includes_cleaning_status(): void
+    {
+        $roomType = RoomType::factory()->create();
+
+        Room::factory()->create(['room_type_id' => $roomType->id, 'status' => 'cleaning']);
+
+        $available = Room::available()->get();
+        $this->assertFalse($available->pluck('status')->contains('cleaning'));
+    }
+
+    public function test_room_number_format_is_numeric(): void
+    {
+        $room = Room::factory()->create(['room_number' => '201']);
+
+        $this->assertEquals('201', $room->room_number);
     }
 }

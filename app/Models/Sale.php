@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Sale extends Model
 {
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     protected $fillable = [
         'receipt_number',
         'items',
@@ -33,6 +34,15 @@ class Sale extends Model
             'tendered_amount'  => 'decimal:2',
             'change'           => 'decimal:2',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (Sale $sale) {
+            if (empty($sale->receipt_number)) {
+                $sale->receipt_number = static::generateReceiptNumber();
+            }
+        });
     }
 
     public function user()

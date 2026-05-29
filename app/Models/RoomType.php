@@ -41,9 +41,8 @@ class RoomType extends Model
     {
         $amenities = $this->amenities;
         if (!$amenities) {
-            return '';
+            return [];
         }
-        $list = is_array($amenities) ? $amenities : json_decode($amenities, true);
-        return is_array($list) ? implode(', ', $list) : '';
+        return is_array($amenities) ? $amenities : (json_decode($amenities, true) ?? []);
     }
 }

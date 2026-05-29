@@ -112,4 +112,12 @@ class BillController extends Controller
         return redirect()->route('bills.index')
             ->with('success', 'Bill marked as paid successfully.');
     }
+
+    public function destroy(Bill $bill)
+    {
+        $bill->delete();
+
+        return redirect()->route('bills.index')
+            ->with('success', 'Bill deleted successfully.');
+    }
 }

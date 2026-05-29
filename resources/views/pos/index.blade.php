@@ -224,14 +224,7 @@ function posRegister() {
     return {
         search: '',
         categoryFilter: '',
-        allItems: @json($items->map(fn($i) => [
-            'id'       => $i->id,
-            'name'     => $i->name,
-            'price'    => (float) $i->selling_price,
-            'stock'    => $i->current_stock,
-            'unit'     => $i->unit,
-            'category' => $i->category,
-        ])),
+        allItems: @json($posItems),
         filteredItems: [],
         cart: [],
         taxPercent: 12,

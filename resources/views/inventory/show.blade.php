@@ -14,7 +14,7 @@
                 <p class="text-sm text-gray-500">{{ $item->category }}</p>
             </div>
             <div class="flex gap-2">
-                <a href="{{ route('inventory.edit', $item) }}" class="px-3 py-1.5 bg-blue-900 text-white text-sm rounded-lg hover:bg-blue-800 transition-colors">
+                <a href="{{ route('inventory.edit', ['inventory' => $item]) }}" class="px-3 py-1.5 bg-blue-900 text-white text-sm rounded-lg hover:bg-blue-800 transition-colors">
                     Edit
                 </a>
                 <a href="{{ route('inventory.index') }}" class="px-3 py-1.5 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors">

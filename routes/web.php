@@ -29,7 +29,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('departments', DepartmentController::class)->except(['show']);
     Route::resource('inventory', InventoryController::class);
     Route::resource('movements', MovementController::class)->except(['edit', 'update', 'destroy', 'show']);
-    Route::resource('bills', BillController::class)->except(['destroy']);
+    Route::resource('bills', BillController::class);
     Route::post('/bills/{bill}/pay', [BillController::class, 'pay'])->name('bills.pay');
     Route::resource('suppliers', SupplierController::class);
     Route::resource('employees', EmployeeController::class);
@@ -39,12 +39,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/payrolls/{payroll}/pay', [PayrollController::class, 'pay'])->name('payrolls.pay');
     Route::resource('room-types', RoomTypeController::class);
     Route::resource('rooms', RoomController::class);
+    Route::get('/bookings/available-rooms', [BookingController::class, 'availableRooms'])->name('bookings.available-rooms');
     Route::resource('bookings', BookingController::class);
     Route::post('/bookings/{booking}/confirm', [BookingController::class, 'confirm'])->name('bookings.confirm');
     Route::post('/bookings/{booking}/check-in', [BookingController::class, 'checkIn'])->name('bookings.check-in');
     Route::post('/bookings/{booking}/check-out', [BookingController::class, 'checkOut'])->name('bookings.check-out');
     Route::post('/bookings/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
-    Route::get('/bookings/available-rooms', [BookingController::class, 'availableRooms'])->name('bookings.available-rooms');
     Route::get('/pos', [PosController::class, 'index'])->name('pos.index');
     Route::post('/pos', [PosController::class, 'store'])->name('pos.store');
     Route::get('/pos/history', [PosController::class, 'history'])->name('pos.history');
