@@ -39,7 +39,7 @@
                             <span class="px-2 py-1 rounded-full text-xs font-medium {{ $sColors[$housekeeping->status] ?? 'bg-gray-100' }}">{{ str_replace('_', ' ', ucwords($housekeeping->status)) }}</span>
                         </div>
                         <div><span class="text-gray-500">Scheduled:</span> {{ $housekeeping->scheduled_date->format('M d, Y') }}</div>
-                        <div><span class="text-gray-500">Assigned To:</span> {{ $housekeeping->assignedStaff->name ?? 'Unassigned' }}</div>
+                        <div><span class="text-gray-500">Assigned To:</span> {{ $housekeeping->assignedStaff->full_name ?? 'Unassigned' }}</div>
                         @if($housekeeping->completed_at)
                         <div><span class="text-gray-500">Completed:</span> {{ $housekeeping->completed_at->format('M d, Y h:i A') }}</div>
                         <div><span class="text-gray-500">Completed By:</span> {{ $housekeeping->completedBy->name ?? 'N/A' }}</div>
@@ -68,7 +68,7 @@
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Assign Staff</label>
                                     <select name="assigned_to" required class="w-full rounded border-gray-300 text-sm mb-2">
                                         <option value="">Select Staff</option>
-                                        @foreach(\App\Models\Employee::orderBy('name')->get() as $emp)
+                                        @foreach(\App\Models\Employee::orderBy('first_name')->orderBy('last_name')->get() as $emp)
                                         <option value="{{ $emp->id }}">{{ $emp->name }}</option>
                                         @endforeach
                                     </select>

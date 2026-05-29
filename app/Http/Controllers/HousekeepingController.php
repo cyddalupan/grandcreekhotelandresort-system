@@ -34,7 +34,7 @@ class HousekeepingController extends Controller
             });
         }
 
-        $tasks = $query->orderByRaw("FIELD(priority, 'urgent','high','normal','low')")
+        $tasks = $query->orderByRaw("CASE priority WHEN 'urgent' THEN 0 WHEN 'high' THEN 1 WHEN 'normal' THEN 2 WHEN 'low' THEN 3 END")
                        ->orderBy('scheduled_date')
                        ->paginate(20);
 
@@ -76,7 +76,7 @@ class HousekeepingController extends Controller
 
     public function show(Housekeeping $housekeeping)
     {
-        $housekeeping->load(['room', 'assignedStaff', 'completedBy']);
+        $housekeeping->load(['room.roomType', 'assignedStaff', 'completedBy']);
         return view('housekeeping.show', compact('housekeeping'));
     }
 
@@ -86,7 +86,7 @@ class HousekeepingController extends Controller
             return back()->with('error', 'Cannot edit a completed task.');
         }
         $rooms     = Room::orderBy('room_number')->get();
-        $employees = Employee::orderBy('name')->get();
+        $employees = Employee::orderBy('first_name')->orderBy('last_name')->get();
         return view('housekeeping.edit', compact('housekeeping', 'rooms', 'employees'));
     }
 

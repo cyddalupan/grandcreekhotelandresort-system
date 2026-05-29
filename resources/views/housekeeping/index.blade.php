@@ -92,7 +92,7 @@
                         </div>
 
                         @if($task->assignedStaff)
-                        <span class="text-xs text-gray-500">👤 {{ $task->assignedStaff->name }}</span>
+                        <span class="text-xs text-gray-500">👤 {{ $task->assignedStaff->full_name }}</span>
                         @endif
 
                         <span class="text-xs text-gray-400">{{ $task->scheduled_date->format('M d') }}</span>
